@@ -2,18 +2,20 @@ from fastapi import FastAPI, Response, status, Depends, APIRouter
 from pydantic import BaseModel
 from typing import Optional, List
 from random import randrange
+from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from fastapi.exceptions import HTTPException
 import psycopg2, random
 from psycopg2.extras import RealDictCursor
 import time
 from sqlalchemy.orm import Session
 from ...database import get_db
-from app import models, schemas, utils
+from datetime import datetime, timedelta, timezone
+from app import models, schemas, utils, oauth2
 
 
 
 router = APIRouter(
-    prefix="/auth",
+    # prefix="/auth",
     tags=['Authentication']
 )
 
@@ -70,3 +72,33 @@ async def register(user: schemas.CreateUser, db: Session = Depends(get_db)):
     )
 
     return response
+
+
+
+
+@router.post("/login", response_model=schemas.TokenResponse)
+async def login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    
+    user = db.query(models.User).filter(models.User.email == user_credentials.username).first()
+    
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Invalid credentials"
+        )
+        
+    if not utils.verify_hashed_password(user_credentials.password, user.password):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Invalid credentials"
+        )
+        
+    user.last_login = datetime.now(timezone.utc)
+    db.commit()
+    
+    formatted_time = user.last_login.strftime("%Y-%m-%d %H:%M:%S")
+    
+        
+    access_token = oauth2.create_access_token(data={"user_id": user.id})
+    
+    return {"access_token": access_token, "token_type": "bearer", "user_id": user.id, "email": user.email, "last_login": formatted_time}

@@ -10,6 +10,8 @@ from sqlalchemy import (
     Text,
     func
 )
+from sqlalchemy.sql.expression import text
+
 from sqlalchemy.orm import relationship
 from .database import Base
 import enum
@@ -37,6 +39,7 @@ class User(Base):
     phone_number = Column(String, nullable=True, unique=True)
     transaction_pin = Column(String, nullable=True)
     account_number = Column(Integer, nullable=False, unique=True)
+    last_login = Column(DateTime(timezone=True), nullable=True, server_default=text("now()"))
     
     # Relationships
     sent_transactions = relationship(

@@ -33,3 +33,32 @@ class CreateUserResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     
     
+    
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+    
+
+class TokenData(BaseModel):
+    id: str
+
+
+# In schemas.py
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str
+    user_id: str
+    email: str
+    last_login: datetime
+    
+    model_config = ConfigDict(from_attributes=True)
+    
+    
+class LoginResponse(BaseModel):
+    access_token: str
+    token_type: str
+    user_id: str
+    email: str
+    last_login: datetime
+    
+    model_config = ConfigDict(from_attributes=True)
