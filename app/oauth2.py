@@ -5,7 +5,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from .database import get_db
 from .config import settings
-from . import schemas
+from . import schemas, models
 
 
 

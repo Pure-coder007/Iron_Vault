@@ -62,3 +62,22 @@ class LoginResponse(BaseModel):
     last_login: datetime
     
     model_config = ConfigDict(from_attributes=True)
+    
+    
+    
+class UserProfileResponse(BaseModel):
+    id: str
+    email: str
+    phone_number: Optional[str] = None
+    account_number: int
+    balance: str
+    is_verified: bool
+    is_frozen: bool
+    role: str
+    created_at: datetime
+    last_login: Optional[datetime] = None
+    nin: Optional[str] = None
+    bvn: Optional[str] = None
+    
+    
+    model_config = ConfigDict(from_attributes=True)
