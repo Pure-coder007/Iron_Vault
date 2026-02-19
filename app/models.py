@@ -26,7 +26,7 @@ class User(Base):
     
     id = Column(String, primary_key=True, default=lambda: str(uuid4()), index=True)
     email = Column(String, unique=True, nullable=False, index=True)
-    hashed_password = Column(String, nullable=False)
+    password = Column(String, nullable=False)
     balance = Column(Numeric(15, 2), default=100000.00, nullable=False)
     is_verified = Column(Boolean, default=False)
     is_frozen = Column(Boolean, default=False)
@@ -34,6 +34,9 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     nin = Column(String, nullable=True)
     bvn = Column(String, nullable=True)
+    phone_number = Column(String, nullable=True, unique=True)
+    transaction_pin = Column(String, nullable=True)
+    account_number = Column(Integer, nullable=False, unique=True)
     
     # Relationships
     sent_transactions = relationship(
