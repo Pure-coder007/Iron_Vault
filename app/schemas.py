@@ -6,6 +6,8 @@ from pydantic.types import conint
 
 
 class CreateUser(BaseModel):
+    first_name: str
+    last_name: str
     email: EmailStr
     password: constr(min_length=8)
     confirm_password: str
@@ -23,6 +25,8 @@ class CreateUser(BaseModel):
 
 class CreateUserResponse(BaseModel):
     id: str
+    account_name: str
+    bank_name: str
     email: EmailStr
     account_number: int
     phone_number: str
@@ -105,3 +109,17 @@ class UpdateProfileResponse(BaseModel):
     nin: Optional[str] = None
     bvn: Optional[str] = None
     
+    
+    model_config = ConfigDict(from_attributes=True)
+    
+    
+
+
+class AccountDetailsResponse(BaseModel):
+    account_number: int
+    account_name: str
+    bank_name: str
+    account_exists: bool = True
+    message: Optional[str] = None
+    
+    model_config = ConfigDict(from_attributes=True)

@@ -2,6 +2,7 @@ from sqlalchemy import (
     Column,
     Integer,
     String,
+    BigInteger,
     Boolean,
     DateTime,
     ForeignKey,
@@ -27,6 +28,8 @@ class User(Base):
     __tablename__ = "users"
     
     id = Column(String, primary_key=True, default=lambda: str(uuid4()), index=True)
+    first_name = Column(String, nullable=False)
+    last_name = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False, index=True)
     password = Column(String, nullable=False)
     balance = Column(Numeric(15, 2), default=100000.00, nullable=False)
@@ -38,8 +41,18 @@ class User(Base):
     bvn = Column(String, nullable=True)
     phone_number = Column(String, nullable=True, unique=True)
     transaction_pin = Column(String, nullable=True)
-    account_number = Column(Integer, nullable=False, unique=True)
+    account_number = Column(BigInteger, nullable=False, unique=True)
+    bank_name = Column(String, nullable=False, default="Iron Vault Bank")
     last_login = Column(DateTime(timezone=True), nullable=True, server_default=text("now()"))
+    
+    def __repr__(self):
+        return f"<User {self.first_name} {self.last_name}>"
+    
+    
+    # Full name
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
     
     # Relationships
     sent_transactions = relationship(
