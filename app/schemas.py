@@ -81,3 +81,27 @@ class UserProfileResponse(BaseModel):
     
     
     model_config = ConfigDict(from_attributes=True)
+    
+    
+    
+    
+    
+class UpdateProfile(BaseModel):
+    email: Optional[EmailStr] = None
+    phone_number: Optional[str] = None
+    
+    
+class UpdateProfileResponse(BaseModel):
+    id: str
+    email: str
+    phone_number: Optional[str] = None
+    account_number: int
+    balance: str
+    is_verified: bool
+    is_frozen: bool
+    role: str
+    created_at: datetime
+    last_login: Optional[datetime] = None
+    nin: Optional[str] = None
+    bvn: Optional[str] = None
+    
